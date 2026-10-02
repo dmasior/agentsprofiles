@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Builder from '../builder/Builder.astro';
+import { buildLibrary } from '../builder/build-library';
+
+const library = buildLibrary({
+  base: await getCollection('base'),
+  focusAreas: await getCollection('focusAreas'),
+  contexts: await getCollection('contexts'),
+  tech: await getCollection('tech'),
+});
+---
+
+<Base
+  title="AgentsProfiles.com"
+  description="Build an AGENTS.md file for your project from project context, focus areas, technology stack, custom instructions and working preferences."
+>
+  <p class="intro">
+    Build an AGENTS.md file for your project. Pick project context, focus areas, stack and working
+    preferences. Add instructions specific to your repository.
+  </p>
+  <Builder library={library} />
+  <section class="guide" aria-labelledby="guide-title">
+    <h2 id="guide-title">How to use the file</h2>
+    <ol>
+      <li>
+        Save <code>AGENTS.md</code> in the root of your repository.
+      </li>
+      <li>
+        Replace each <code>&lt;placeholder&gt;</code> with the real command for your project.
+      </li>
+      <li>Read every rule. Remove rules that do not fit your project.</li>
+      <li>Keep the file short. State when area-specific instructions apply.</li>
+      <li>Commit the file. Update it when your stack or process changes.</li>
+    </ol>
+    <h3>About AGENTS.md</h3>
+    <p>
+      AGENTS.md is an open format for instructions to coding agents. Many coding agents read it from
+      the root of the repository. More information: <a href="https://agents.md">agents.md</a>.
+    </p>
+  </section>
+</Base>

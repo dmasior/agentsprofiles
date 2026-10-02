@@ -1,0 +1,41 @@
+:root {
+  color-scheme: light;
+  --bg: #faf8f4;
+  --ink: #1d1b18;
+  --muted: #5f5a52;
+  --rule: #e3ded4;
+  --rule-strong: #1d1b18;
+  --surface: #f0ece4;
+  --accent: #b4441f;
+  --on-ink: #faf8f4;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #171512;
+  --ink: #ece7de;
+  --muted: #a8a196;
+  --rule: #34302a;
+  --rule-strong: #ece7de;
+  --surface: #1f1c18;
+  --accent: #e07a52;
+  --on-ink: #171512;
+}
+
+/* Without JS, data-theme is never set, so follow the OS. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #171512;
+    --ink: #ece7de;
+    --muted: #a8a196;
+    --rule: #34302a;
+    --rule-strong: #ece7de;
+    --surface: #1f1c18;
+    --accent: #e07a52;
+    --on-ink: #171512;
+  }
+}

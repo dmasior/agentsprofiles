@@ -1,0 +1,7 @@
+dist
+.astro
+.superpowers
+node_modules
+package-lock.json
+tests/__snapshots__
+*.md

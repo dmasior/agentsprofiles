@@ -1,0 +1,70 @@
+---
+import '@fontsource/source-serif-4/400.css';
+import '@fontsource/source-serif-4/600.css';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <script is:inline>
+      // Runs before first paint so the page never shows the wrong theme.
+      (function () {
+        var pref = 'system';
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored === 'light' || stored === 'dark') pref = stored;
+        } catch (e) {}
+        var dark =
+          pref === 'dark' ||
+          (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="wordmark" href="/">
+          AgentsProfiles.com
+        </a>
+        <div class="header-tools">
+          <fieldset class="theme-switch" data-theme-switch hidden>
+            <legend class="visually-hidden">Theme</legend>
+            <label>
+              <input type="radio" name="theme" value="light" />
+              <span>Light</span>
+            </label>
+            <label>
+              <input type="radio" name="theme" value="dark" />
+              <span>Dark</span>
+            </label>
+            <label>
+              <input type="radio" name="theme" value="system" />
+              <span>System</span>
+            </label>
+          </fieldset>
+          <a href="https://github.com/dmasior/agentsprofiles">GitHub</a>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <slot />
+    </main>
+    <script>
+      import '../lib/theme-switch';
+    </script>
+  </body>
+</html>

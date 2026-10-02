@@ -1,0 +1,219 @@
+---
+import '../styles/builder.css';
+import { serializeLibrary } from './build-library';
+import { filterStack } from './stack-filter';
+import type { FragmentLibrary } from './types';
+
+interface Props {
+  library: FragmentLibrary;
+}
+
+const { library } = Astro.props;
+const groups = filterStack(library.tech, '');
+---
+
+<noscript>
+  <p class="notice">The builder needs JavaScript. The guide below works without it.</p>
+</noscript>
+
+<div class="builder" data-builder hidden>
+  <div class="wizard">
+    <ol class="steps" aria-label="Steps">
+      <li>
+        <button type="button" class="step-tab" data-step-tab="1">
+          1 Project context
+        </button>
+      </li>
+      <li>
+        <button type="button" class="step-tab" data-step-tab="2">
+          2 Focus areas
+        </button>
+      </li>
+      <li>
+        <button type="button" class="step-tab" data-step-tab="3">
+          3 Stack
+        </button>
+      </li>
+      <li>
+        <button type="button" class="step-tab" data-step-tab="4">
+          4 Preferences
+        </button>
+      </li>
+    </ol>
+
+    <section class="panel" data-step-panel="1" aria-labelledby="step-1-title">
+      <h2 id="step-1-title" tabindex="-1">
+        Project context
+      </h2>
+      <p class="hint">Select the one that fits the project best.</p>
+      <fieldset>
+        <legend class="visually-hidden">Project context</legend>
+        {library.contexts.map((context) => (
+          <label class="option">
+            <input type="radio" name="context" value={context.id} />
+            <span>
+              <span class="option-label">{context.label}</span>
+              <span class="option-desc">{context.description}</span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+      <div class="nav">
+        <button type="button" class="button primary" data-next="1">
+          Next
+        </button>
+      </div>
+    </section>
+
+    <section class="panel" data-step-panel="2" aria-labelledby="step-2-title">
+      <h2 id="step-2-title" tabindex="-1">
+        Focus areas
+      </h2>
+      <p class="hint">Optional. Choose areas that need additional guidance.</p>
+      <fieldset>
+        <legend class="visually-hidden">Focus areas</legend>
+        {library.focusAreas.map((area) => (
+          <label class="option">
+            <input type="checkbox" name="focus-area" value={area.id} />
+            <span class="option-label">{area.label}</span>
+          </label>
+        ))}
+      </fieldset>
+      <div class="custom-instructions">
+        <label for="custom-instructions">Custom instructions</label>
+        <p class="hint" id="custom-instructions-hint">
+          Optional. Add repository conventions, important paths, domain constraints or instructions
+          for specific work. Markdown supported. Included in shared links.
+        </p>
+        <textarea
+          id="custom-instructions"
+          name="custom-instructions"
+          rows="6"
+          aria-describedby="custom-instructions-hint"
+          placeholder="- Use integer minor units for monetary values.&#10;- When editing src/billing/, preserve invoice audit history."
+        ></textarea>
+      </div>
+      <div class="nav">
+        <button type="button" class="button" data-back="2">
+          Back
+        </button>
+        <button type="button" class="button primary" data-next="2">
+          Next
+        </button>
+      </div>
+    </section>
+
+    <section class="panel" data-step-panel="3" aria-labelledby="step-3-title">
+      <h2 id="step-3-title" tabindex="-1">
+        Stack
+      </h2>
+      <p class="hint">Select one or more technologies.</p>
+      <label class="search">
+        <span class="visually-hidden">Search technologies</span>
+        <input
+          type="search"
+          data-stack-search
+          placeholder="Search, for example postgres or k8s"
+          autocomplete="off"
+        />
+      </label>
+      <ul class="chips" data-stack-chips aria-label="Selected technologies"></ul>
+      <p class="hint" data-stack-empty hidden>
+        No match.
+      </p>
+      {groups.map((group) => (
+        <fieldset class="group" data-group={group.id}>
+          <legend>{group.label}</legend>
+          <div class="group-items">
+            {group.items.map((tech) => (
+              <label class="option" data-tech={tech.id}>
+                <input type="checkbox" name="stack" value={tech.id} />
+                <span class="option-label">{tech.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ))}
+      <div class="nav">
+        <button type="button" class="button" data-back="3">
+          Back
+        </button>
+        <button type="button" class="button primary" data-next="3">
+          Next
+        </button>
+      </div>
+    </section>
+
+    <section class="panel" data-step-panel="4" aria-labelledby="step-4-title">
+      <h2 id="step-4-title" tabindex="-1">
+        Working preferences
+      </h2>
+      <p class="hint">Optional preferences for writing and development.</p>
+      <fieldset>
+        <legend class="visually-hidden">Working preferences</legend>
+        <label class="option">
+          <input type="checkbox" name="simplified-english" />
+          <span>
+            <span class="option-label">Simplified technical English</span>
+            <span class="option-desc">Write using ASD-STE100 simplified technical English.</span>
+          </span>
+        </label>
+        <label class="option">
+          <input type="checkbox" name="minimize-comments" />
+          <span>
+            <span class="option-label">Minimize code comments</span>
+            <span class="option-desc">
+              Explain only non-obvious intent. Do not restate the code.
+            </span>
+          </span>
+        </label>
+        <label class="option">
+          <input type="checkbox" name="tdd" />
+          <span>
+            <span class="option-label">Test-driven development (TDD)</span>
+            <span class="option-desc">Write tests first. Use the red-green-refactor cycle.</span>
+          </span>
+        </label>
+      </fieldset>
+      <div class="nav">
+        <button type="button" class="button" data-back="4">
+          Back
+        </button>
+      </div>
+    </section>
+
+    <p class="start-over">
+      <button type="button" class="link" data-start-over>
+        Start over
+      </button>
+    </p>
+  </div>
+
+  <aside class="preview" aria-labelledby="preview-title">
+    <div class="preview-head">
+      <h2 id="preview-title">AGENTS.md</h2>
+      <span class="line-count" data-line-count></span>
+    </div>
+    <pre class="preview-body" data-preview tabindex="0"></pre>
+    <p class="long-note" data-long-note hidden>
+      Long files reduce agent focus. Consider fewer selections.
+    </p>
+    <div class="actions">
+      <button type="button" class="button primary" data-download>
+        Download AGENTS.md
+      </button>
+      <button type="button" class="button" data-copy>
+        Copy
+      </button>
+      <button type="button" class="button" data-copy-link>
+        Copy link
+      </button>
+    </div>
+    <p class="visually-hidden" aria-live="polite" data-status></p>
+  </aside>
+</div>
+
+<script type="application/json" id="fragments" is:inline set:html={serializeLibrary(library)} />
+<script>
+  import './builder';
+</script>
