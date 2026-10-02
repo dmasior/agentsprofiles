@@ -162,11 +162,16 @@ code {
   cursor: pointer;
 }
 
+.page-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-block: 32px 12px;
+}
+
 .intro {
   font-family: var(--font-serif);
   font-size: 1.25rem;
   max-width: 40rem;
-  margin-block: 32px 24px;
+  margin-block: 0 24px;
 }
 
 .notice {
